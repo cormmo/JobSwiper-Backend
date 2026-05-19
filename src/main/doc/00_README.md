@@ -1,3 +1,6 @@
+#### Sebastian Steiner ####
+
+---
 # JobSwiper – LAP Projektvorschlag
 ## Applikationsentwicklung - Coding | Betriebliches Projekt
 
@@ -33,8 +36,8 @@ Datenbankanbindung (H2 im Backend via JPA).
 Webbasiert und responsive (Thymeleaf + Bootstrap 5).  
 Sicherheitskonzept (JWT, BCrypt, CORS-Whitelist, Rollen).  
 Entwicklungssprache Java.  
-Programmieraufwand ≥ 50 Stunden (geplant: ~54h rein Coding).  
-Gesamtaufwand ca. 80 Stunden.
+Programmieraufwand ≥ 65 Stunden (geplant: ~51h rein Coding).  
+Gesamtaufwand ca. 90 Stunden.
 
 ---
 
@@ -44,9 +47,3 @@ Gesamtaufwand ca. 80 Stunden.
 - **JWT-Flow** im Browser-DevTools (Authorization-Header, Token-Inhalt)
 - **Swipe-Matching-System** als zentrales Feature (Like/Dislike + Match-Erstellung)
 - **Zwei getrennte Anwendungen** (Frontend + Backend) wie in realen Projekten
-
----
-
-## Hinweis für Schüler
-
-Name und Unterschriften in `01_Anmeldung_betriebliches_Projekt.md` sind individuell auszufüllen. Alle anderen Inhalte können als vollständige Vorlage für die Einreichung übernommen und angepasst werden.

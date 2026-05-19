@@ -1,3 +1,6 @@
+#### Sebastian Steiner ####
+
+---
 # Projektplan mit Zeitschätzung
 ## JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
 
@@ -24,16 +27,16 @@
 
 ## Projektstrukturplan (PSP)
 
-### Phase 1 – Planung und Architekturdesign (10 h)
+### Phase 1 – Planung und Architekturdesign (14 h)
 
 | Aufgabe | Stunden |
 |---------|---------|
-| Anforderungsanalyse, Pflichtenheft verfassen | 3 h |
+| Anforderungsanalyse, Pflichtenheft verfassen | 6 h |
 | ER-Diagramm und Datenbankmodell entwerfen | 2 h |
 | REST-API Design: Endpunkte, Request/Response-DTOs definieren | 2 h |
 | Projektplan erstellen | 2 h |
 | Beide Maven-Projekte aufsetzen, pom.xml + Dependencies | 1 h |
-| **Summe Phase 1** | **10 h** |
+| **Summe Phase 1** | **14 h** |
 
 ### Phase 2 – Backend: Basis-Infrastruktur (12 h)
 
@@ -69,17 +72,17 @@
 | JWT im SessionStorage speichern; automatische Weiterleitung bei abgelaufenem Token | 1 h |
 | **Summe Phase 4** | **5 h** |
 
-### Phase 5 – Frontend: Profil- und Jobverwaltung (10 h)
+### Phase 5 – Frontend: Profil- und Jobverwaltung (12 h)
 
 | Aufgabe | Stunden |
 |---------|---------|
 | Layout-Template (Navbar, Sidebar-Navigation, Footer) | 1 h |
-| Dashboard Arbeitnehmer (Profilübersicht) | 1 h |
-| Dashboard Arbeitgeber (Stellenübersicht) | 1 h |
+| Dashboard Arbeitnehmer (Profilübersicht) | 2 h |
+| Dashboard Arbeitgeber (Stellenübersicht) | 2 h |
 | Profil-Formular (Arbeitnehmer) | 3 h |
 | Stellenangebot-Verwaltung (Liste + Anlegen/Bearbeiten) | 3 h |
 | Anzeige von Profil- und Jobdetails | 1 h |
-| **Summe Phase 5** | **10 h** |
+| **Summe Phase 5** | **12 h** |
 
 ### Phase 6 – Frontend: Matching und Swipe-UI (7 h)
 
@@ -132,16 +135,16 @@
 
 | Phase | Bezeichnung | Stunden |
 |-------|-------------|---------|
-| 1 | Planung und Architekturdesign | 10 h |
+| 1 | Planung und Architekturdesign | 14 h |
 | 2 | Backend: Basis-Infrastruktur | 12 h |
 | 3 | Backend: Fachliche REST-Endpunkte | 12 h |
 | 4 | Frontend: Infrastruktur und Auth | 5 h |
-| 5 | Frontend: Profil- und Jobverwaltung | 10 h |
+| 5 | Frontend: Profil- und Jobverwaltung | 12 h |
 | 6 | Frontend: Matching und Swipe-UI | 7 h |
 | 7 | Wunschkriterien | 5 h |
 | 8 | Testing | 14 h |
 | 9 | Dokumentation und Abschluss | 15 h |
-| | **Gesamt** | **90 h** |
+| | **Gesamt** | **96 h** |
 
 **Reiner Programmieraufwand** (Phase 1 Coding-Anteil + Phasen 2–7): ~60–65 h (Mindestanforderung: 50 h)
 
@@ -150,14 +153,14 @@
 ## Zeitlicher Ablauf (8 Wochen)
 
 ```
-Woche 1:  ████████████████████ Phase 1 – Planung (9h)
-Woche 2:  ████████████████████████████████████████ Phase 2 – Backend Basis (12h)
-Woche 3:  ████████████████████████████████████████ Phase 3 – Backend API, Teil 1 (10h)
-Woche 4:  ████████████████████████████████████████ Phase 3 – Backend API, Teil 2 + Phase 4 (5h)
-Woche 5:  ████████████████████████████████ Phase 5 – Frontend Profil- und Jobverwaltung (8h)
-Woche 6:  ████████████████████████████████████████ Phase 6 (5h) + Phase 7 Wunschkriterien (5h)
-Woche 7:  ████████████████████████████████████████ Phase 8 – Testing (12h)
-Woche 8:  ████████████████████████████████████████████████████ Phase 9 – Doku + Abschluss (14h)
+Woche 1:  ██████████████████████████████████████████████ Phase 1 – Planung (14h)
+Woche 2:  ██████████████████████████████████████ Phase 2 – Backend Basis (12h)
+Woche 3:  ██████████████████████████████████████ Phase 3 – Backend API, Teil 1 (12h)
+Woche 4:  ████████████████████████ Phase 3 – Backend API, Teil 2 + Phase 4 (5h)
+Woche 5:  ██████████████████████████████████████ Phase 5 – Frontend Profil- und Jobverwaltung (12h)
+Woche 6:  █████████████████████████████████ Phase 6 (5h) + Phase 7 Wunschkriterien (5h)
+Woche 7:  ██████████████████████████████████████ Phase 8 – Testing (12h)
+Woche 8:  ██████████████████████████████████████████████ Phase 9 – Doku + Abschluss (14h)
 ```
 
 ---

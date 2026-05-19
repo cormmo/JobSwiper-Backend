@@ -1,3 +1,6 @@
+#### Sebastian Steiner ####
+
+---
 # Executive Summary
 ## JobSwiper – Webbasiertes Matching-System für Arbeitnehmer und Arbeitgeber
 

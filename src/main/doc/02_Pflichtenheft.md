@@ -1,3 +1,6 @@
+#### Sebastian Steiner ####
+
+---
 # Pflichtenheft
 ## JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
 
@@ -114,8 +117,6 @@ H2 Database (embedded im Backend)
 | REST-API (intern) | Frontend → Backend über HTTP/JSON, Port 8080 |
 | H2-Datenbankschnittstelle | Backend → H2 via JDBC / Spring Data JPA |
 | Browser-HTTP | Benutzer → Frontend über HTTP, Port 8081 |
-| Matching-Logik | Backend-interne Verarbeitung von Swipe-Aktionen und Match-Erzeugung (M06) |
-| CORS-Header | Backend sendet `Access-Control-Allow-Origin` an Browser |
 
 ---
 
@@ -364,7 +365,7 @@ Im Browser-Netzwerk-Tab ist bei jedem API-Aufruf der `OPTIONS`-Preflight-Request
 
 | Tool | Version / Zweck |
 |------|----------------|
-| JDK | 17 (LTS) |
+| JDK | 21 |
 | Spring Boot | 3.2.x (beide Projekte) |
 | Maven | 3.9.x |
 | IntelliJ IDEA | 2024.x |
@@ -469,4 +470,3 @@ jobswiper/
 | Öffentliche Endpunkte | Nur dort freigegeben, wo sie fachlich erforderlich sind |
 
 **Konzept Weiterentwicklung:** HTTPS (TLS), Chat-Funktion nach Match, Rate-Limiting auf Login-Endpunkt, Refresh-Token-Mechanismus, Audit-Log.
-
