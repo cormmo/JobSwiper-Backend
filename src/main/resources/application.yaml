@@ -1,31 +1,37 @@
 spring:
   application:
     name: JobSwiperBackend
-    datasource:
-      url: jdbc:h2:mem:jobswiperbackend;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
+  datasource:
+    url: jdbc:h2:file:./data/jobswiper
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
   h2:
     console:
-      enabled: true
+      enabled: false
       path: /h2-console
-jpa:
-  hibernate:
-    ddl-auto: update
-  open-in-view: false
-  defer-datasource-initialization: true
-  properties:
+  jpa:
     hibernate:
-      jdbc:
-        time_zone: UTC
-  session:
-    store-type: jdbc
-    jdbc:
-      initialize-schema: always
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
 
 server:
-  port: 8081
-  servlet:
-    session:
-      timeout: 2d
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:jobswiper-local-development-secret-change-me-2026}
+  expiration: 28800000
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:8081
+      - http://127.0.0.1:8081
+  admin:
+    username: ${ADMIN_USERNAME:}
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
