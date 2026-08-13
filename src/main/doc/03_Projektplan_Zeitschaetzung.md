@@ -4,9 +4,9 @@
 # Projektplan mit Zeitschätzung
 ## JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
 
-**Gesamtaufwand:** ca. 90 Stunden
-**Reiner Programmieraufwand:** ca. 65 Stunden
-**Testaufwand:** ca. 15 Stunden
+**Gesamtaufwand:** ca. 95 Stunden
+**Reiner Programmieraufwand:** ca. 52 Stunden
+**Testaufwand:** ca. 14 Stunden
 **Dokumentation:** ca. 15 Stunden
 
 ---
@@ -20,8 +20,8 @@
 | M3 | Backend vollständig: alle REST-Endpunkte | 3–4 | API vollständig, via REST-Client testbar |
 | M4 | Frontend vollständig: alle Seiten, API-Calls | 5–6 | Vollständige Web-App nutzbar |
 | M5 | Matching-System + Swipe-Funktion umgesetzt | 6 | Swipe-Funktion und Match-Erstellung funktionsfähig |
-| M6 | Tests abgeschlossen, alle Bugs behoben | 7 | Alle 12 Testfälle bestanden |
-| M7 | Dokumentation und Abgabe | 8 | Vollständige Abgabe beider Projekte |
+| M6 | Tests abgeschlossen, alle Bugs behoben | 7 | 10 manuelle Testfälle und 2 automatisierte Unit Tests bestanden |
+| M7 | Dokumentation und Abgabe | 8 | Vollständige Abgabe Projekt Frontend u. Backend |
 
 ---
 
@@ -94,14 +94,13 @@
 | Match-Übersicht (Liste aller Matches) | 1 h |
 | **Summe Phase 6** | **7 h** |
 
-### Phase 7 – Wunschkriterien (5 h)
+### Phase 7 – Wunschkriterien (4 h)
 
 | Aufgabe | Stunden |
 |---------|---------|
 | Match-Benachrichtigung im Frontend (W01) | 2 h |
 | Admin-Dashboard mit Statistiken (W04) | 2 h |
-| Filterfunktion für Jobs und Profile (W05) | 1 h |
-| **Summe Phase 7** | **5 h** |
+| **Summe Phase 7** | **4 h** |
 
 ### Phase 8 – Testing (14 h)
 
@@ -113,7 +112,7 @@
 | Integration Tests: `AuthController` mit MockMvc | 2 h |
 | Integration Tests: ProfileController mit MockMvc + JWT | 2 h |
 | Integration Tests: CORS-Header (OPTIONS-Request) | 1 h |
-| Manueller Test aller 12 Testfälle aus dem Pflichtenheft | 4 h |
+| Manueller Test der 10 fachlichen/API-Testfälle aus dem Pflichtenheft | 4 h |
 | **Summe Phase 8** | **14 h** |
 
 ### Phase 9 – Dokumentation und Abschluss (15 h)
@@ -141,12 +140,12 @@
 | 4 | Frontend: Infrastruktur und Auth | 5 h |
 | 5 | Frontend: Profil- und Jobverwaltung | 12 h |
 | 6 | Frontend: Matching und Swipe-UI | 7 h |
-| 7 | Wunschkriterien | 5 h |
+| 7 | Wunschkriterien | 4 h |
 | 8 | Testing | 14 h |
 | 9 | Dokumentation und Abschluss | 15 h |
-| | **Gesamt** | **96 h** |
+| | **Gesamt** | **95 h** |
 
-**Reiner Programmieraufwand** (Phase 1 Coding-Anteil + Phasen 2–7): ~60–65 h (Mindestanforderung: 50 h)
+**Reiner Programmieraufwand** (Phase 1 Coding-Anteil + Phasen 2–7): ~59–64 h (Mindestanforderung: 50 h)
 
 ---
 
@@ -158,7 +157,7 @@ Woche 2:  ███████████████████████�
 Woche 3:  ██████████████████████████████████████ Phase 3 – Backend API, Teil 1 (12h)
 Woche 4:  ████████████████████████ Phase 3 – Backend API, Teil 2 + Phase 4 (5h)
 Woche 5:  ██████████████████████████████████████ Phase 5 – Frontend Profil- und Jobverwaltung (12h)
-Woche 6:  █████████████████████████████████ Phase 6 (5h) + Phase 7 Wunschkriterien (5h)
+Woche 6:  █████████████████████████████████ Phase 6 (5h) + Phase 7 Wunschkriterien (4h)
 Woche 7:  ██████████████████████████████████████ Phase 8 – Testing (12h)
 Woche 8:  ██████████████████████████████████████████████ Phase 9 – Doku + Abschluss (14h)
 ```

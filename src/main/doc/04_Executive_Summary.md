@@ -2,89 +2,46 @@
 
 ---
 # Executive Summary
-## JobSwiper – Webbasiertes Matching-System für Arbeitnehmer und Arbeitgeber
+## JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
 
 ---
 
-## Das Problem
+## Ausgangssituation
 
-Der Prozess der Jobsuche hat sich trotz Digitalisierung nur teilweise weiterentwickelt. Bewerbungen erfolgen häufig weiterhin über standardisierte E-Mail-Verfahren oder komplexe Online-Portale, die für viele Nutzer unübersichtlich und zeitaufwendig sind.
+Der Bewerbungsprozess ist trotz Digitalisierung oft noch zeitaufwendig und stark formalisiert. Arbeitssuchende müssen sich durch komplexe Portale und lange Bewerbungsformulare arbeiten, während Arbeitgeber viele Bewerbungen sichten müssen, bevor passende Kandidaten erkennbar sind. Ein schneller, unkomplizierter Erstkontakt zwischen beiden Seiten fehlt häufig.
 
-- Bewerbungen sind oft langwierig und formalisiert
-- Plattformen bieten wenig intuitive Möglichkeiten für schnellen Erstkontakt
-- Arbeitgeber müssen viele unpassende Bewerbungen sichten
-- Arbeitnehmer erhalten wenig direktes Feedback oder schnelle Rückmeldungen
+## Lösung
 
-Sowohl Arbeitnehmer als auch Arbeitgeber stehen somit vor der Herausforderung, effizient passende Matches zu finden.
+**JobSwiper** ist eine webbasierte Anwendung, die die Kontaktanbahnung zwischen Arbeitnehmern und Arbeitgebern vereinfacht. Arbeitnehmer bewerten Stellenangebote per Like oder Dislike, Arbeitgeber bewerten Arbeitnehmerprofile auf dieselbe Weise. Wenn beide Seiten Interesse zeigen, erzeugt das System automatisch ein Match, das anschließend in einer Übersicht angezeigt wird.
 
----
+Die Anwendung besteht aus zwei getrennten Spring Boot Projekten:
 
-## Die Lösung
-
-**JobSwiper** ist eine webbasierte Plattform, die den Bewerbungsprozess durch ein modernes, swipe-basiertes Matching-System vereinfacht.
-
-### Architektur: Zwei getrennte Spring Boot Anwendungen
-
-Das System besteht aus zwei eigenständigen Anwendungen:
-
-```
-jobswiper-backend  (Port 8080)  →  REST-API, Datenbank, Authentifizierung
-jobswiper-frontend (Port 8081)  →  Benutzeroberfläche, kommuniziert über REST
+```text
+jobswiper-backend  (Port 8080)  -> REST-API, Datenbank, Authentifizierung
+jobswiper-frontend (Port 8081)  -> Weboberfläche, API-Kommunikation
 ```
 
-Diese Trennung erfordert eine explizite **CORS-Konfiguration**, wodurch ein zentrales Konzept moderner Webentwicklung praxisnah demonstriert wird.
-
-### Swipe-basiertes Matching: Das Kernelement
-
-JobSwiper verwendet ein intuitives Swipe-System:
-
-- Arbeitnehmer bewerten Stellenangebote (Like/Dislike)
-- Arbeitgeber bewerten Arbeitnehmerprofile
-- Bei beidseitigem Interesse entsteht automatisch ein Match
-- Matches können anschließend übersichtlich eingesehen werden
-
-Dadurch wird der Bewerbungsprozess deutlich beschleunigt und vereinfacht.
-
----
+Durch diese Trennung kommuniziert das Frontend ausschließlich über HTTP mit dem Backend. Die notwendige CORS-Konfiguration ist ein bewusst gewähltes technisches Kernmerkmal und kann in der Prüfung praxisnah demonstriert werden.
 
 ## Kernfunktionen
 
-| Funktion | Beschreibung |
-|----------|-------------|
-| Benutzerprofile | Arbeitnehmer- und Arbeitgeberprofile mit relevanten Informationen |
-| Stellenangebote | Erstellung und Verwaltung von Jobangeboten |
-| Swipe-Matching | Intuitive Like/Dislike-Interaktion |
-| Match-System | Automatische Erkennung von beidseitigem Interesse |
-| JWT-Authentifizierung | Sichere tokenbasierte Anmeldung |
-| CORS-Architektur | Zwei getrennte Anwendungen mit API-Kommunikation |
-| Admin-Übersicht | Verwaltung von Benutzern, Jobs und Matches |
+| Bereich | Inhalt |
+|---------|--------|
+| Benutzerverwaltung | Registrierung, Login, Rollen für Arbeitnehmer, Arbeitgeber und Admin |
+| Profile | Arbeitnehmerprofile und Arbeitgeberprofile mit relevanten Stammdaten |
+| Stellenangebote | Erstellen, Bearbeiten und Deaktivieren von Jobangeboten |
+| Swipe-Matching | Like/Dislike-Entscheidungen und automatische Match-Erstellung |
+| Administration | Übersicht über Benutzer, Stellenangebote und Matches |
+| Sicherheit | JWT-Authentifizierung, BCrypt-Passwortspeicherung, serverseitige Validierung |
 
----
+## Technische Umsetzung
 
-## Technologiestack
+Das Backend wird mit Java 21, Spring Boot 4, Spring Security, Spring Data JPA und H2 umgesetzt. Es stellt eine REST-API bereit, kapselt alle Datenzugriffe und enthält die Geschäftslogik für Authentifizierung, Profile, Stellenangebote, Swipes und Matches.
 
-| Bereich | Technologie |
-|---------|------------|
-| Sprache | Java 21 |
-| Backend-Framework | Spring Boot 3, Spring Security 6, Spring Data JPA |
-| Authentifizierung | JWT (jjwt-Bibliothek) |
-| Datenbank | H2 (embedded, Datei-Modus) |
-| Frontend-Framework | Spring Boot 3 + Thymeleaf + Bootstrap 5 |
-| Build | Maven |
-| Tests | JUnit 5, Mockito, Spring Boot Test / MockMvc |
+Das Frontend ist ebenfalls eine eigenständige Spring Boot Anwendung mit Thymeleaf und Bootstrap 5. Es stellt ein responsives Web-Interface bereit und ruft das Backend über REST-Endpunkte auf. Tests werden mit JUnit 5, Mockito und Spring Boot Test / MockMvc umgesetzt.
 
----
+## Relevanz für die LAP
 
-## Warum JobSwiper für die LAP?
+JobSwiper verbindet einen verständlichen Anwendungsfall mit praxisnahen Technologien der modernen Webentwicklung. Besonders demonstrierbar sind die getrennte Frontend-/Backend-Architektur, CORS, JWT-Authentifizierung, Datenpersistenz über JPA/H2 sowie das zentrale Swipe-Matching.
 
-Das Projekt verbindet praxisrelevante Themen der modernen Softwareentwicklung mit einem realitätsnahen Anwendungsfall:
-
-- **CORS** wird praktisch demonstriert durch getrennte Frontend-/Backend-Architektur
-- **JWT-Authentifizierung** entspricht Industriestandard für REST-APIs
-- **Zwei-Projekt-Architektur** bildet reale Systemarchitekturen ab
-- **Swipe-Matching-System** zeigt innovative und benutzerfreundliche UI/UX-Konzepte
-- Alle Pflichtanforderungen der LAP werden erfüllt (eigenständige App, Datenbank, responsives Web, Sicherheit, Java, ≥ 50h Programmieraufwand)
-
----
-
-*Dieses Projekt erfüllt alle Pflichtanforderungen des betrieblichen Projekts nach § 11 der Ausbildungsordnung Applikationsentwicklung – Coding: eigenständig lauffähige Applikation, Datenbankanbindung (H2/JPA), webbasiert und responsive (Bootstrap 5), Sicherheitskonzept (JWT, BCrypt, CORS), Entwicklungssprache Java, Programmieraufwand ≥ 50 Stunden.*
+Das Projekt erfüllt die Pflichtanforderungen des betrieblichen Projekts: eigenständig lauffähige Applikation, Datenbankanbindung, webbasiertes responsives Frontend, Sicherheitskonzept, Java als Entwicklungssprache und ein geplanter Programmieraufwand von mehr als 50 Stunden.

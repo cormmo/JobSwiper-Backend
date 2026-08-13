@@ -1,8 +1,7 @@
-#### Sebastian Steiner ####
-
+### Sebastian Steiner
 ---
-# JobSwiper – LAP Projektvorschlag
-## Applikationsentwicklung - Coding | Betriebliches Projekt
+# JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
+## LAP Projektvorschlag | Applikationsentwicklung - Coding | Betriebliches Projekt
 
 ---
 
@@ -22,10 +21,10 @@
 
 | Datei | Inhalt | Zweck |
 |-------|--------|-------|
-| `01_Anmeldung_betriebliches_Projekt.md` | Ausgefülltes Anmeldeformular | Bei Lehrlingsstelle einzureichen |
-| `02_Pflichtenheft.md` | Vollständiges Pflichtenheft (alle 11 Abschnitte) | Bei Lehrlingsstelle einzureichen |
-| `03_Projektplan_Zeitschaetzung.md` | Meilensteinplan + PSP mit Stundenaufstellung | Bei Lehrlingsstelle einzureichen |
-| `04_Executive_Summary.md` | 2-seitige Projektbeschreibung nach den Leitfragen | Teil des Anmeldeformulars |
+| `01_Anmeldung_betriebliches_Projekt.pdf` | Ausgefülltes Anmeldeformular | Bei Lehrlingsstelle einzureichen |
+| `02_Pflichtenheft.pdf` | Vollständiges Pflichtenheft (alle 11 Abschnitte) | Bei Lehrlingsstelle einzureichen |
+| `03_Projektplan_Zeitschaetzung.pdf` | Meilensteinplan + PSP mit Stundenaufstellung | Bei Lehrlingsstelle einzureichen |
+| `04_Executive_Summary.pdf` | 2-seitige Projektbeschreibung nach den Leitfragen | Teil des Anmeldeformulars |
 
 ---
 

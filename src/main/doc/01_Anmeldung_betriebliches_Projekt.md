@@ -1,6 +1,3 @@
-#### Sebastian Steiner ####
-
----
 # Anmeldung zur Lehrabschlussprüfung
 
 ## Praktische Prüfung – Applikationsentwicklung - Coding
@@ -78,8 +75,8 @@ Optional können **Administratoren** (z. B. Plattformbetreiber) das System verwa
 ## Hinweis zur Einreichung
 
 Mit diesem Dokument werden folgende Unterlagen bei der Lehrlingsstelle eingereicht:
-Pflichtenheft (`02_Pflichtenheft.md`)  
-Projektplan mit Zeitschätzung (`03_Projektplan_Zeitschaetzung.md`)
+Pflichtenheft (`02_Pflichtenheft.pdf`)
+Projektplan mit Zeitschätzung (`03_Projektplan_Zeitschaetzung.pdf`)
 
 Der Quellcode beider Teilprojekte wird spätestens 3 Wochen vor dem Prüfungstermin offengelegt.
 

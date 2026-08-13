@@ -4,7 +4,7 @@
 # Pflichtenheft
 ## JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer
 
-**Projektbezeichnung:** JobSwiper
+**Projektbezeichnung:** **JobSwiper – Webbasiertes Jobportal für Arbeitgeber und Arbeitnehmer**
 **Version:** 1.0
 **Erstellt am:** 23.04.2026
 
@@ -98,7 +98,7 @@ H2 Database (embedded im Backend)
 
 | Komponente | Version |
 |-----------|---------|
-| Java Runtime Environment | 17 (LTS) oder höher |
+| Java Runtime Environment | 21 |
 | Webbrowser | Chrome 110+, Firefox 110+, Edge 110+ |
 | Betriebssystem | Windows 10/11, Linux, macOS |
 
@@ -174,13 +174,13 @@ Benutzer können Stellenangebote oder Arbeitnehmerprofile nach Kategorien, Fähi
 **EmployeeProfile** (1:1 zu User)
 - id (Long, PK)
 - user (User, FK, unique)
-- fullName (String)
+- firstName (String)
+- lastName (String)
 - phone (String)
 - location (String)
 - summary (String)
 - skills (String oder separate Entity)
 - desiredPosition (String)
-- profileImageBase64 (String, nullable)
 - lastUpdated (LocalDateTime)
 
 **WorkExperience** (n:1 zu EmployeeProfile)
@@ -200,7 +200,6 @@ Benutzer können Stellenangebote oder Arbeitnehmerprofile nach Kategorien, Fähi
 - description (String)
 - location (String)
 - contactEmail (String)
-- companyLogoBase64 (String, nullable)
 - lastUpdated (LocalDateTime)
 
 **JobOffer** (n:1 zu EmployerProfile)
@@ -344,10 +343,10 @@ Im Browser-Netzwerk-Tab ist bei jedem API-Aufruf der `OPTIONS`-Preflight-Request
 - **Aktion:** GET `/api/admin/overview` mit Arbeitnehmer-JWT
 - **Erwartetes Ergebnis:** HTTP 403 Forbidden
 
-### Testfall 10 – Filterfunktion anwenden (W05)
-- **Vorbedingung:** Mehrere Stellenangebote oder Arbeitnehmerprofile vorhanden
-- **Aktion:** GET `/api/jobs?category=IT&location=Wien`
-- **Erwartetes Ergebnis:** HTTP 200; nur passende Einträge werden zurückgegeben
+### Testfall 10 – Serverseitige Validierung ungültiger Eingaben
+- **Vorbedingung:** Arbeitnehmer ist eingeloggt (JWT vorhanden)
+- **Aktion:** PUT `/api/profile/me` mit ungültigen oder unvollständigen Profildaten
+- **Erwartetes Ergebnis:** HTTP 400 Bad Request; Validierungsfehler werden strukturiert zurückgegeben und keine ungültigen Daten gespeichert
 
 ### Testfall 11 – Unit Test: JWT-Generierung und Validierung (automatisiert)
 - **Typ:** JUnit 5 Unit Test
@@ -366,7 +365,7 @@ Im Browser-Netzwerk-Tab ist bei jedem API-Aufruf der `OPTIONS`-Preflight-Request
 | Tool | Version / Zweck |
 |------|----------------|
 | JDK | 21 |
-| Spring Boot | 3.2.x (beide Projekte) |
+| Spring Boot | 4.0.x (Backend; Frontend-Version separat festlegen) |
 | Maven | 3.9.x |
 | IntelliJ IDEA | 2024.x |
 | Git | 2.x |
@@ -465,6 +464,7 @@ jobswiper/
 | CORS | Whitelist: nur Frontend-Origin erlaubt |
 | Autorisierung | Spring Security Method-Security (`@PreAuthorize`) |
 | Eingabevalidierung | Bean Validation auf allen DTOs |
+| Filevalidierung | Validierung auf Bilddateien bei Profilbild |
 | SQL-Injection | Ausschließlich JPA/JPQL-Abfragen |
 | XSS | Thymeleaf escaped standardmäßig; kein `th:utext` auf Benutzerdaten |
 | Öffentliche Endpunkte | Nur dort freigegeben, wo sie fachlich erforderlich sind |
