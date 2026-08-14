@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jobswiper-test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: false
+
+jwt:
+  secret: jobswiper-test-secret-at-least-thirty-two-bytes-long
+  expiration: 28800000
