@@ -1,0 +1,266 @@
+openapi: 3.1.0
+info:
+  title: JobSwiper API
+  version: 1.0.0
+  description: REST API for profiles, job offers, swipe decisions, matches, and moderation.
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+paths:
+  /api/auth/register:
+    post:
+      security: []
+      summary: Register an employee or employer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201': { description: Registered, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '409': { description: Username or email already exists }
+  /api/auth/login:
+    post:
+      security: []
+      summary: Authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200': { description: Authenticated, content: { application/json: { schema: { $ref: '#/components/schemas/AuthResponse' } } } }
+        '401': { description: Invalid credentials }
+  /api/auth/me:
+    get:
+      summary: Get the authenticated account
+      responses:
+        '200': { description: Current account, content: { application/json: { schema: { $ref: '#/components/schemas/User' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/profile/me:
+    get:
+      summary: Get own employee profile
+      responses:
+        '200': { description: Employee profile }
+    put:
+      summary: Create or replace own employee profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmployeeProfileRequest' }
+      responses:
+        '200': { description: Updated employee profile }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /api/profile/employees:
+    get:
+      summary: List active candidate profiles
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/Size' }
+        - { name: skill, in: query, schema: { type: string } }
+        - { name: location, in: query, schema: { type: string } }
+      responses:
+        '200': { description: Page of employee profiles }
+  /api/employer/profile/me:
+    get:
+      summary: Get own employer profile
+      responses:
+        '200': { description: Employer profile }
+    put:
+      summary: Create or replace own employer profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmployerProfileRequest' }
+      responses:
+        '200': { description: Updated employer profile }
+  /api/jobs:
+    get:
+      summary: List active jobs
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/Size' }
+        - { name: category, in: query, schema: { type: string } }
+        - { name: location, in: query, schema: { type: string } }
+      responses:
+        '200': { description: Page of job offers }
+    post:
+      summary: Create a job as its employer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JobOfferRequest' }
+      responses:
+        '201': { description: Created job offer }
+  /api/jobs/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer, format: int64 } }
+    get:
+      summary: Get an active job
+      responses:
+        '200': { description: Job offer }
+        '404': { description: Job not found }
+    put:
+      summary: Update an owned job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JobOfferRequest' }
+      responses:
+        '200': { description: Updated job offer }
+        '403': { $ref: '#/components/responses/Forbidden' }
+  /api/jobs/{id}/active:
+    patch:
+      summary: Activate or deactivate an owned job
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer, format: int64 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ActiveRequest' }
+      responses:
+        '200': { description: Updated job offer }
+  /api/swipes/job/{jobId}:
+    post:
+      summary: Employee likes or dislikes a job
+      parameters:
+        - { name: jobId, in: path, required: true, schema: { type: integer, format: int64 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JobSwipeRequest' }
+      responses:
+        '200': { description: Stored swipe, including whether it created a match }
+  /api/swipes/profile/{employeeId}:
+    post:
+      summary: Employer likes or dislikes an employee for an owned job
+      parameters:
+        - { name: employeeId, in: path, required: true, schema: { type: integer, format: int64 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProfileSwipeRequest' }
+      responses:
+        '200': { description: Stored swipe, including whether it created a match }
+  /api/matches:
+    get:
+      summary: List the authenticated user's matches
+      parameters:
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/Size' }
+      responses:
+        '200': { description: Page of matches }
+  /api/admin/overview:
+    get:
+      summary: Get administration counts
+      responses:
+        '200': { description: User, active-job, and match counts }
+        '403': { $ref: '#/components/responses/Forbidden' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Page: { name: page, in: query, schema: { type: integer, minimum: 0, default: 0 } }
+    Size: { name: size, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+  responses:
+    BadRequest: { description: Validation failed }
+    Unauthorized: { description: Authentication is required }
+    Forbidden: { description: The account or role cannot perform this operation }
+  schemas:
+    Role: { type: string, enum: [ARBEITNEHMER, ARBEITGEBER] }
+    Decision: { type: string, enum: [LIKE, DISLIKE] }
+    RegisterRequest:
+      type: object
+      required: [username, email, password, role]
+      properties:
+        username: { type: string, minLength: 3, maxLength: 32 }
+        email: { type: string, format: email, maxLength: 254 }
+        password: { type: string, format: password, minLength: 8, maxLength: 72 }
+        role: { $ref: '#/components/schemas/Role' }
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string, format: password }
+    User:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        username: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [ADMIN, ARBEITNEHMER, ARBEITGEBER] }
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
+    AuthResponse:
+      type: object
+      properties:
+        token: { type: string }
+        tokenType: { type: string, const: Bearer }
+        expiresAt: { type: string, format: date-time }
+        user: { $ref: '#/components/schemas/User' }
+    WorkExperienceRequest:
+      type: object
+      required: [company, position, startDate]
+      properties:
+        company: { type: string, maxLength: 120 }
+        position: { type: string, maxLength: 120 }
+        startDate: { type: string, format: date }
+        endDate: { type: [string, 'null'], format: date }
+        description: { type: string, maxLength: 2000 }
+        sortOrder: { type: integer, minimum: 0 }
+    EmployeeProfileRequest:
+      type: object
+      required: [firstName, lastName, skills, workExperience]
+      properties:
+        firstName: { type: string, maxLength: 80 }
+        lastName: { type: string, maxLength: 80 }
+        phone: { type: string, maxLength: 40 }
+        location: { type: string, maxLength: 120 }
+        summary: { type: string, maxLength: 2000 }
+        desiredPosition: { type: string, maxLength: 160 }
+        skills: { type: array, maxItems: 30, items: { type: string, maxLength: 80 } }
+        workExperience: { type: array, maxItems: 30, items: { $ref: '#/components/schemas/WorkExperienceRequest' } }
+    EmployerProfileRequest:
+      type: object
+      required: [companyName, contactEmail]
+      properties:
+        companyName: { type: string, maxLength: 160 }
+        description: { type: string, maxLength: 3000 }
+        location: { type: string, maxLength: 120 }
+        contactEmail: { type: string, format: email, maxLength: 254 }
+    JobOfferRequest:
+      type: object
+      required: [title, description, requirements, location, category]
+      properties:
+        title: { type: string, maxLength: 160 }
+        description: { type: string, maxLength: 5000 }
+        requirements: { type: string, maxLength: 3000 }
+        location: { type: string, maxLength: 120 }
+        category: { type: string, maxLength: 100 }
+    ActiveRequest:
+      type: object
+      required: [active]
+      properties: { active: { type: boolean } }
+    JobSwipeRequest:
+      type: object
+      required: [decision]
+      properties: { decision: { $ref: '#/components/schemas/Decision' } }
+    ProfileSwipeRequest:
+      type: object
+      required: [jobOfferId, decision]
+      properties:
+        jobOfferId: { type: integer, format: int64 }
+        decision: { $ref: '#/components/schemas/Decision' }
