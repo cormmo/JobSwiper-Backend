@@ -13,49 +13,110 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * Configures Spring Security for the application.
+ *
+ * <p>Defines protected endpoints, JWT authentication and stateless sessions.</p>
+ */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+    /**
+     * Creates the security configuration.
+     *
+     * @param jwtAuthFilter filter used for JWT authentication
+     */
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
+    /**
+     * Defines the security rules for HTTP requests.
+     *
+     * @param http Spring Security HTTP configuration
+     * @return the configured security filter chain
+     * @throws Exception if the configuration fails
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/openapi.yaml",
-                                "/h2-console", "/h2-console/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/openapi.yaml",
+                                "/h2-console",
+                                "/h2-console/**"
+                        ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(errors -> errors
-                        .authenticationEntryPoint((request, response, exception) -> writeSecurityError(
-                                response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized", "Authentication is required"))
-                        .accessDeniedHandler((request, response, exception) -> writeSecurityError(
-                                response, HttpServletResponse.SC_FORBIDDEN, "Forbidden", "Access is denied"))
+                        .authenticationEntryPoint((request, response, exception) ->
+                                writeSecurityError(
+                                        response,
+                                        HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Unauthorized",
+                                        "Authentication is required"
+                                ))
+                        .accessDeniedHandler((request, response, exception) ->
+                                writeSecurityError(
+                                        response,
+                                        HttpServletResponse.SC_FORBIDDEN,
+                                        "Forbidden",
+                                        "Access is denied"
+                                ))
                 )
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .headers(headers ->
+                        headers.frameOptions(frame -> frame.sameOrigin()))
+                .addFilterBefore(
+                        jwtAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
+
         return http.build();
     }
 
+    /**
+     * Provides the password encoder used for user passwords.
+     *
+     * @return BCrypt password encoder
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
-    private static void writeSecurityError(HttpServletResponse response, int status, String title, String detail)
-            throws java.io.IOException {
+    /**
+     * Writes a JSON response for authentication and authorization errors.
+     *
+     * @param response HTTP response
+     * @param status HTTP status code
+     * @param title error title
+     * @param detail error description
+     * @throws java.io.IOException if the response cannot be written
+     */
+    private static void writeSecurityError(
+            HttpServletResponse response,
+            int status,
+            String title,
+            String detail
+    ) throws java.io.IOException {
+
         response.setStatus(status);
         response.setContentType("application/problem+json");
-        response.getWriter().write("{\"type\":\"about:blank\",\"title\":\"" + title
-                + "\",\"status\":" + status + ",\"detail\":\"" + detail + "\"}");
+
+        response.getWriter().write(
+                "{\"type\":\"about:blank\",\"title\":\"" + title
+                        + "\",\"status\":" + status
+                        + ",\"detail\":\"" + detail + "\"}"
+        );
     }
 }
