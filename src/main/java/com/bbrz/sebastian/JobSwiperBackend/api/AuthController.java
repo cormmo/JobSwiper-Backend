@@ -71,11 +71,11 @@ public class AuthController {
      * Logs out the current user.
      *
      * <p>Because JWT authentication is stateless, logout is handled by
-     * removing the token on the client.</p>
+     * removing the token on the client.
+     * Stateless JWT logout is performed by discarding the token on the client.</p>
      */
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout() {
-        // Stateless JWT logout is performed by discarding the token on the client.
     }
 }
