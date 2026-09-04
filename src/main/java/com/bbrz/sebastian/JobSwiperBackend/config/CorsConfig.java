@@ -22,6 +22,9 @@ public class CorsConfig {
     /**
      * Creates the CORS configuration using the configured allowed origins.
      *
+     * Using a constructor here makes the code testable, ensuring not having to
+     * use reflection on this class when using mocks.
+     *
      * @param properties CORS settings from the application configuration
      */
     public CorsConfig(CorsProperties properties) {
@@ -29,7 +32,7 @@ public class CorsConfig {
     }
 
     /**
-     * Defines the CORS rules for API requests.
+     * Defines the CORS rules for API requests for Spring Security.
      *
      * <p>Allows common HTTP methods and the Authorization and Content-Type headers.</p>
      *
@@ -47,7 +50,11 @@ public class CorsConfig {
                 List.of("Authorization", "Content-Type")
         );
 
+
+        // Browser credentials like cookies are ignored on cross origin requests,
+        // because of JWT sent in auth header
         configuration.setAllowCredentials(false);
+        // sets the time of pre flight before "OPTIONS" needs to be requested again to 1h
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
