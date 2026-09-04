@@ -43,6 +43,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // disabled because cookie based authentication is not in use
                 .csrf(csrf -> csrf.disable())
                 .cors(withDefaults())
                 .sessionManagement(session ->
@@ -74,6 +75,12 @@ public class SecurityConfig {
                                         "Access is denied"
                                 ))
                 )
+
+                /*
+                 * Spring Security usually blocks frames, this allows frames only from same origin
+                 * to access h2 console
+                 */
+
                 .headers(headers ->
                         headers.frameOptions(frame -> frame.sameOrigin()))
                 .addFilterBefore(
