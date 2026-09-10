@@ -18,14 +18,16 @@ public final class JobDtos {
 
     public record ActiveRequest(boolean active) {}
 
-    public record JobOfferResponse(Long id, Long employerId, String companyName, String title, String description,
-                                   String requirements, String location, String category, boolean active,
-                                   Instant createdAt, Instant lastUpdated) {
+    public record JobOfferResponse(Long id, Long employerId, String companyName, String companyLogo,
+                                   String title, String description, String requirements, String location,
+                                   String category, boolean active, Instant createdAt, Instant lastUpdated) {
         public static JobOfferResponse from(JobOffer job) {
             return new JobOfferResponse(job.getId(), job.getEmployerProfile().getUser().getId(),
-                    job.getEmployerProfile().getCompanyName(), job.getTitle(), job.getDescription(),
-                    job.getRequirements(), job.getLocation(), job.getCategory(), job.isActive(),
-                    job.getCreatedAt(), job.getLastUpdated());
+                    job.getEmployerProfile().getCompanyName(),
+                    ProfileDtos.toDataUrl(job.getEmployerProfile().getCompanyLogoMediaType(),
+                            job.getEmployerProfile().getCompanyLogo()),
+                    job.getTitle(), job.getDescription(), job.getRequirements(), job.getLocation(),
+                    job.getCategory(), job.isActive(), job.getCreatedAt(), job.getLastUpdated());
         }
     }
 }
