@@ -23,4 +23,10 @@ public class EmployerProfileController {
                                                        @Valid @RequestBody ProfileDtos.EmployerProfileRequest request) {
         return profiles.updateEmployer(auth, request);
     }
+
+    @PutMapping("/me/logo")
+    public ProfileDtos.EmployerProfileResponse uploadCompanyLogo(
+            Authentication auth, @Valid @RequestBody ProfileDtos.ImageUploadRequest request) {
+        return profiles.uploadEmployerCompanyLogo(auth, request);
+    }
 }

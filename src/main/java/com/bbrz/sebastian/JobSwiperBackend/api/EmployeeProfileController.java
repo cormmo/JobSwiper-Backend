@@ -30,6 +30,13 @@ public class EmployeeProfileController {
         return profiles.updateEmployee(auth, request);
     }
 
+    @PutMapping("/me/profile-picture")
+    @PreAuthorize("hasRole('ARBEITNEHMER')")
+    public ProfileDtos.EmployeeProfileResponse uploadProfilePicture(
+            Authentication auth, @Valid @RequestBody ProfileDtos.ImageUploadRequest request) {
+        return profiles.uploadEmployeeProfilePicture(auth, request);
+    }
+
     @GetMapping("/employees/{userId}")
     @PreAuthorize("hasAnyRole('ARBEITGEBER','ADMIN')")
     public ProfileDtos.EmployeeProfileResponse employee(@PathVariable Long userId) {
