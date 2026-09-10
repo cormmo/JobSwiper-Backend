@@ -64,6 +64,18 @@ paths:
         - { name: location, in: query, schema: { type: string } }
       responses:
         '200': { description: Page of employee profiles }
+  /api/profile/me/profile-picture:
+    put:
+      summary: Upload the authenticated employee's Base64 profile picture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ImageUploadRequest' }
+      responses:
+        '200': { description: Employee profile including the uploaded picture as a data URL }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { description: Employee profile has not been created }
   /api/employer/profile/me:
     get:
       summary: Get own employer profile
@@ -78,6 +90,18 @@ paths:
             schema: { $ref: '#/components/schemas/EmployerProfileRequest' }
       responses:
         '200': { description: Updated employer profile }
+  /api/employer/profile/me/logo:
+    put:
+      summary: Upload the authenticated employer's Base64 company logo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ImageUploadRequest' }
+      responses:
+        '200': { description: Employer profile including the uploaded logo as a data URL }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { description: Employer profile has not been created }
   /api/jobs:
     get:
       summary: List active jobs
@@ -241,6 +265,14 @@ components:
         description: { type: string, maxLength: 3000 }
         location: { type: string, maxLength: 120 }
         contactEmail: { type: string, format: email, maxLength: 254 }
+    ImageUploadRequest:
+      type: object
+      required: [imageBase64]
+      description: JPEG, PNG, or GIF image; maximum decoded size 5 MB and maximum dimensions 4096 x 4096 pixels.
+      properties:
+        imageBase64:
+          type: string
+          description: Raw Base64 image data or a data URL such as data:image/png;base64,...
     JobOfferRequest:
       type: object
       required: [title, description, requirements, location, category]
