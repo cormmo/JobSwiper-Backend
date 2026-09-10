@@ -8,10 +8,15 @@ import jakarta.validation.constraints.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 
 public final class ProfileDtos {
     private ProfileDtos() {}
+
+    public record ImageUploadRequest(
+            @NotBlank(message = "imageBase64 is required")
+            @Size(max = 7_000_000, message = "imageBase64 is too large") String imageBase64) {}
 
     public record WorkExperienceRequest(
             @NotBlank @Size(max = 120) String company,
@@ -51,12 +56,13 @@ public final class ProfileDtos {
     public record EmployeeProfileResponse(Long id, AuthDtos.UserResponse user, String firstName, String lastName,
                                           String phone, String location, String summary, String desiredPosition,
                                           List<String> skills, List<WorkExperienceResponse> workExperience,
-                                          Instant lastUpdated) {
+                                          String profilePicture, Instant lastUpdated) {
         public static EmployeeProfileResponse from(EmployeeProfile profile) {
             return new EmployeeProfileResponse(profile.getId(), AuthDtos.UserResponse.from(profile.getUser()),
                     profile.getFirstName(), profile.getLastName(), profile.getPhone(), profile.getLocation(),
                     profile.getSummary(), profile.getDesiredPosition(), profile.getSkills(),
                     profile.getWorkExperience().stream().map(WorkExperienceResponse::from).toList(),
+                    toDataUrl(profile.getProfilePictureMediaType(), profile.getProfilePicture()),
                     profile.getLastUpdated());
         }
     }
@@ -69,11 +75,20 @@ public final class ProfileDtos {
 
     public record EmployerProfileResponse(Long id, AuthDtos.UserResponse user, String companyName,
                                           String description, String location, String contactEmail,
-                                          Instant lastUpdated) {
+                                          String companyLogo, Instant lastUpdated) {
         public static EmployerProfileResponse from(EmployerProfile profile) {
             return new EmployerProfileResponse(profile.getId(), AuthDtos.UserResponse.from(profile.getUser()),
                     profile.getCompanyName(), profile.getDescription(), profile.getLocation(),
-                    profile.getContactEmail(), profile.getLastUpdated());
+                    profile.getContactEmail(),
+                    toDataUrl(profile.getCompanyLogoMediaType(), profile.getCompanyLogo()),
+                    profile.getLastUpdated());
         }
+    }
+
+    static String toDataUrl(String mediaType, byte[] image) {
+        if (mediaType == null || image == null) {
+            return null;
+        }
+        return "data:" + mediaType + ";base64," + Base64.getEncoder().encodeToString(image);
     }
 }
