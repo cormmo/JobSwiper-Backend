@@ -19,12 +19,14 @@ public class ProfileService {
     private final CurrentUserService currentUsers;
     private final EmployeeProfileRepository employees;
     private final EmployerProfileRepository employers;
+    private final ProfileImageService images;
 
     public ProfileService(CurrentUserService currentUsers, EmployeeProfileRepository employees,
-                          EmployerProfileRepository employers) {
+                          EmployerProfileRepository employers, ProfileImageService images) {
         this.currentUsers = currentUsers;
         this.employees = employees;
         this.employers = employers;
+        this.images = images;
     }
 
     @Transactional
@@ -43,6 +45,17 @@ public class ProfileService {
         UserAccount user = currentUsers.requireRole(auth, Role.ARBEITNEHMER);
         return ProfileDtos.EmployeeProfileResponse.from(employees.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee profile has not been created")));
+    }
+
+    @Transactional
+    public ProfileDtos.EmployeeProfileResponse uploadEmployeeProfilePicture(
+            Authentication auth, ProfileDtos.ImageUploadRequest request) {
+        UserAccount user = currentUsers.requireRole(auth, Role.ARBEITNEHMER);
+        EmployeeProfile profile = employees.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee profile has not been created"));
+        ProfileImageService.ValidatedImage image = images.validateAndDecode(request.imageBase64());
+        profile.updateProfilePicture(image.data(), image.mediaType());
+        return ProfileDtos.EmployeeProfileResponse.from(employees.save(profile));
     }
 
     @Transactional(readOnly = true)
@@ -73,6 +86,17 @@ public class ProfileService {
         UserAccount user = currentUsers.requireRole(auth, Role.ARBEITGEBER);
         return ProfileDtos.EmployerProfileResponse.from(employers.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employer profile has not been created")));
+    }
+
+    @Transactional
+    public ProfileDtos.EmployerProfileResponse uploadEmployerCompanyLogo(
+            Authentication auth, ProfileDtos.ImageUploadRequest request) {
+        UserAccount user = currentUsers.requireRole(auth, Role.ARBEITGEBER);
+        EmployerProfile profile = employers.findByUserId(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employer profile has not been created"));
+        ProfileImageService.ValidatedImage image = images.validateAndDecode(request.imageBase64());
+        profile.updateCompanyLogo(image.data(), image.mediaType());
+        return ProfileDtos.EmployerProfileResponse.from(employers.save(profile));
     }
 
     private String normalize(String value) {
