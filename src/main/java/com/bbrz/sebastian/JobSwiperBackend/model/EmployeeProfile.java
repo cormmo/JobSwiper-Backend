@@ -23,6 +23,13 @@ public class EmployeeProfile {
     @Column(length = 2000) private String summary;
     @Column(length = 160) private String desiredPosition;
 
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
+    @Column(name = "profile_picture_media_type", length = 32)
+    private String profilePictureMediaType;
+
     @ElementCollection
     @CollectionTable(name = "employee_skills", joinColumns = @JoinColumn(name = "profile_id"))
     @Column(name = "skill", nullable = false, length = 80)
@@ -57,6 +64,12 @@ public class EmployeeProfile {
         this.lastUpdated = Instant.now();
     }
 
+    public void updateProfilePicture(byte[] profilePicture, String mediaType) {
+        this.profilePicture = profilePicture.clone();
+        this.profilePictureMediaType = mediaType;
+        this.lastUpdated = Instant.now();
+    }
+
     public Long getId() { return id; }
     public UserAccount getUser() { return user; }
     public String getFirstName() { return firstName; }
@@ -65,6 +78,8 @@ public class EmployeeProfile {
     public String getLocation() { return location; }
     public String getSummary() { return summary; }
     public String getDesiredPosition() { return desiredPosition; }
+    public byte[] getProfilePicture() { return profilePicture == null ? null : profilePicture.clone(); }
+    public String getProfilePictureMediaType() { return profilePictureMediaType; }
     public List<String> getSkills() { return List.copyOf(skills); }
     public List<WorkExperience> getWorkExperience() { return List.copyOf(workExperience); }
     public Instant getLastUpdated() { return lastUpdated; }
