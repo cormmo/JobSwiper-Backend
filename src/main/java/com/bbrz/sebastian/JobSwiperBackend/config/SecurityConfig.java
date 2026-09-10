@@ -1,6 +1,6 @@
 package com.bbrz.sebastian.JobSwiperBackend.config;
 
-import jakarta.servlet.http.HttpServletResponse;
+import com.bbrz.sebastian.JobSwiperBackend.exception.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -23,14 +23,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final GlobalExceptionHandler exceptionHandler;
 
     /**
      * Creates the security configuration.
      *
      * @param jwtAuthFilter filter used for JWT authentication
+     * @param exceptionHandler centralized API exception handler
      */
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, GlobalExceptionHandler exceptionHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.exceptionHandler = exceptionHandler;
     }
 
     /**
@@ -60,20 +63,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(errors -> errors
-                        .authenticationEntryPoint((request, response, exception) ->
-                                writeSecurityError(
-                                        response,
-                                        HttpServletResponse.SC_UNAUTHORIZED,
-                                        "Unauthorized",
-                                        "Authentication is required"
-                                ))
-                        .accessDeniedHandler((request, response, exception) ->
-                                writeSecurityError(
-                                        response,
-                                        HttpServletResponse.SC_FORBIDDEN,
-                                        "Forbidden",
-                                        "Access is denied"
-                                ))
+                        .authenticationEntryPoint(exceptionHandler)
+                        .accessDeniedHandler(exceptionHandler)
                 )
 
                 /*
@@ -101,29 +92,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(12);
     }
 
-    /**
-     * Writes a JSON response for authentication and authorization errors.
-     *
-     * @param response HTTP response
-     * @param status HTTP status code
-     * @param title error title
-     * @param detail error description
-     * @throws java.io.IOException if the response cannot be written
-     */
-    private static void writeSecurityError(
-            HttpServletResponse response,
-            int status,
-            String title,
-            String detail
-    ) throws java.io.IOException {
-
-        response.setStatus(status);
-        response.setContentType("application/problem+json");
-
-        response.getWriter().write(
-                "{\"type\":\"about:blank\",\"title\":\"" + title
-                        + "\",\"status\":" + status
-                        + ",\"detail\":\"" + detail + "\"}"
-        );
-    }
 }
