@@ -17,6 +17,8 @@ import java.util.Optional;
  */
 public interface JobOfferRepository extends JpaRepository<JobOffer, Long> {
 
+    long countByEmployerProfileId(Long employerProfileId);
+
     /**
      * Returns all active job offers.
      *
