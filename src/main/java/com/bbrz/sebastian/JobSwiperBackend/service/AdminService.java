@@ -7,6 +7,7 @@ import com.bbrz.sebastian.JobSwiperBackend.dto.MatchDtos;
 import com.bbrz.sebastian.JobSwiperBackend.dto.PageResponse;
 import com.bbrz.sebastian.JobSwiperBackend.exception.ConflictException;
 import com.bbrz.sebastian.JobSwiperBackend.exception.ResourceNotFoundException;
+import com.bbrz.sebastian.JobSwiperBackend.model.JobMatch;
 import com.bbrz.sebastian.JobSwiperBackend.model.JobOffer;
 import com.bbrz.sebastian.JobSwiperBackend.model.UserAccount;
 import com.bbrz.sebastian.JobSwiperBackend.repository.JobMatchRepository;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class AdminService {
@@ -66,5 +70,38 @@ public class AdminService {
         JobOffer job = jobs.findById(jobId).orElseThrow(() -> new ResourceNotFoundException("Job offer not found"));
         job.setActive(active);
         return JobDtos.JobOfferResponse.from(job);
+    }
+
+    @Transactional(readOnly = true)
+    public AdminDtos.GroupedMatchSearchResponse searchMatches(String query) {
+        String term = query.strip().toLowerCase(Locale.ROOT);
+
+        return new AdminDtos.GroupedMatchSearchResponse(
+                groupMatches(matches.findMatchesForEmployees(term), JobMatch::getEmployee),
+                groupMatches(matches.findMatchesForEmployers(term), JobMatch::getEmployer)
+        );
+    }
+
+    private List<AdminDtos.ParticipantMatches> groupMatches(
+            List<JobMatch> results,
+            Function<JobMatch, UserAccount> participant
+    ) {
+        Map<Long, AuthDtos.UserResponse> usersById = new LinkedHashMap<>();
+        Map<Long, List<MatchDtos.MatchResponse>> matchesByUserId = new LinkedHashMap<>();
+
+        for (JobMatch match : results) {
+            UserAccount user = participant.apply(match);
+            usersById.putIfAbsent(user.getId(), AuthDtos.UserResponse.from(user));
+            matchesByUserId
+                    .computeIfAbsent(user.getId(), ignored -> new ArrayList<>())
+                    .add(MatchDtos.MatchResponse.from(match));
+        }
+
+        return matchesByUserId.entrySet().stream()
+                .map(entry -> new AdminDtos.ParticipantMatches(
+                        usersById.get(entry.getKey()),
+                        entry.getValue()
+                ))
+                .toList();
     }
 }
