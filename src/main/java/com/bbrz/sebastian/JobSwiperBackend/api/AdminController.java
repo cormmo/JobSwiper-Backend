@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Min;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * Provides administrative API endpoints.
@@ -109,5 +111,12 @@ public class AdminController {
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
         return admin.matches(page, size);
+    }
+
+    @GetMapping("/matches/search")
+    public AdminDtos.GroupedMatchSearchResponse searchMatches(
+            @RequestParam @NotBlank @Size(max = 254) String query
+    ) {
+        return admin.searchMatches(query);
     }
 }
