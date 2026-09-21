@@ -2,6 +2,7 @@ package com.bbrz.sebastian.JobSwiperBackend.service;
 
 import com.bbrz.sebastian.JobSwiperBackend.config.JwtConfig;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -72,14 +73,17 @@ public class JwtService {
      * @param token the JWT to validate
      * @param user the expected token owner
      * @return {@code true} if the token is valid for the user; otherwise {@code false}
-     * @throws io.jsonwebtoken.JwtException if the token cannot be parsed or verified
      */
     public boolean isTokenValid(String token, UserDetails user) {
-        Claims claims = getClaims(token);
+        try {
+            Claims claims = getClaims(token);
 
-        return user.isEnabled()
-                && user.getUsername().equalsIgnoreCase(claims.getSubject())
-                && claims.getExpiration().after(new Date());
+            return user.isEnabled()
+                    && user.getUsername().equalsIgnoreCase(claims.getSubject())
+                    && claims.getExpiration().after(new Date());
+        } catch (JwtException | IllegalArgumentException exception) {
+            return false;
+        }
     }
 
     private Claims getClaims(String token) {
