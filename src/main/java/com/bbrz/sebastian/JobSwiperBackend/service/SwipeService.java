@@ -6,12 +6,10 @@ import com.bbrz.sebastian.JobSwiperBackend.enums.Role;
 import com.bbrz.sebastian.JobSwiperBackend.enums.SwipeDirection;
 import com.bbrz.sebastian.JobSwiperBackend.exception.ForbiddenOperationException;
 import com.bbrz.sebastian.JobSwiperBackend.exception.ResourceNotFoundException;
-import com.bbrz.sebastian.JobSwiperBackend.model.JobMatch;
 import com.bbrz.sebastian.JobSwiperBackend.model.JobOffer;
 import com.bbrz.sebastian.JobSwiperBackend.model.SwipeDecision;
 import com.bbrz.sebastian.JobSwiperBackend.model.UserAccount;
 import com.bbrz.sebastian.JobSwiperBackend.repository.EmployeeProfileRepository;
-import com.bbrz.sebastian.JobSwiperBackend.repository.JobMatchRepository;
 import com.bbrz.sebastian.JobSwiperBackend.repository.SwipeDecisionRepository;
 import com.bbrz.sebastian.JobSwiperBackend.repository.UserAccountRepository;
 import org.springframework.security.core.Authentication;
@@ -31,7 +29,7 @@ public class SwipeService {
     private final UserAccountRepository users;
     private final EmployeeProfileRepository employeeProfiles;
     private final SwipeDecisionRepository swipes;
-    private final JobMatchRepository matches;
+    private final MatchService matchService;
 
     /**
      * Creates the swipe service.
@@ -41,7 +39,7 @@ public class SwipeService {
      * @param users user repository
      * @param employeeProfiles employee profile repository
      * @param swipes swipe decision repository
-     * @param matches match repository
+     * @param matchService service responsible for creating matches
      */
     public SwipeService(
             CurrentUserService currentUsers,
@@ -49,14 +47,14 @@ public class SwipeService {
             UserAccountRepository users,
             EmployeeProfileRepository employeeProfiles,
             SwipeDecisionRepository swipes,
-            JobMatchRepository matches) {
+            MatchService matchService) {
 
         this.currentUsers = currentUsers;
         this.jobService = jobService;
         this.users = users;
         this.employeeProfiles = employeeProfiles;
         this.swipes = swipes;
-        this.matches = matches;
+        this.matchService = matchService;
     }
 
     /**
@@ -101,7 +99,7 @@ public class SwipeService {
 
         return SwipeDtos.SwipeResponse.from(
                 swipe,
-                createMatchIfMutual(
+                matchService.createIfMutual(
                         employee,
                         employer,
                         job,
@@ -169,7 +167,7 @@ public class SwipeService {
 
         return SwipeDtos.SwipeResponse.from(
                 swipe,
-                createMatchIfMutual(
+                matchService.createIfMutual(
                         employee,
                         employer,
                         job,
@@ -213,41 +211,4 @@ public class SwipeService {
         return swipes.save(swipe);
     }
 
-    /**
-     * Creates a match when both sides have liked each other.
-     */
-    private boolean createMatchIfMutual(
-            UserAccount employee,
-            UserAccount employer,
-            JobOffer job,
-            Decision currentDecision,
-            SwipeDirection counterpartDirection) {
-
-        if (currentDecision != Decision.LIKE) {
-            return false;
-        }
-
-        boolean counterpartLiked =
-                swipes.findByEmployeeIdAndEmployerIdAndJobOfferIdAndDirection(
-                                employee.getId(),
-                                employer.getId(),
-                                job.getId(),
-                                counterpartDirection
-                        )
-                        .map(swipe ->
-                                swipe.getDecision() == Decision.LIKE)
-                        .orElse(false);
-
-        if (!counterpartLiked
-                || matches.existsByEmployeeIdAndEmployerIdAndJobOfferId(
-                employee.getId(),
-                employer.getId(),
-                job.getId())) {
-            return false;
-        }
-
-        matches.save(new JobMatch(employee, employer, job));
-
-        return true;
-    }
 }
